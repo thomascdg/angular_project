@@ -1,0 +1,12 @@
+<div>
+  <input [(ngModel)]="newTitle" placeholder="Nouvelle tâche">
+  <button (click)="addTask()">Ajouter</button>
+</div>
+
+@for (task of tasks; track task) {
+  <app-task-item
+    [task]="task"
+    (taskCompleted)="onTaskCompleted($event)"
+    (taskDeleted)="onTaskDeleted($event)">
+  </app-task-item>
+}

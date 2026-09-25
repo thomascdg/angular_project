@@ -1,0 +1,7 @@
+<div>
+  <input type="checkbox" [checked]="goal.tasks[0].completed" (change)="onGoalCompleted()">
+  <span>{{ goal.title }}</span>
+  <span>{{ goal.limit_date | date }}</span>
+  <span>{{ goal.tasks.length }} tâches</span>
+  <button (click)="onGoalDeleted()">Supprimer</button>
+</div>

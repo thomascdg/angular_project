@@ -1,0 +1,6 @@
+<div>
+  <input type="checkbox" [checked]="task.completed" (change)="onTaskCompleted()">
+  <span>{{ task.title }}</span>
+  <span>{{ task.dueDate | date }}</span>
+  <button (click)="onTaskDeleted()">Supprimer</button>
+</div>
