@@ -1,1 +1,13 @@
-<p>goal-list works!</p>
+<div>
+  <input [(ngModel)]="newTitle" placeholder="Nouvelle tâche">
+  <button (click)="addGoal()">Ajouter un objectif</button>
+</div>
+
+
+@for (goal of goals; track goal) {
+  <app-goal-item
+    [goal]="goal"
+    (goalCompleted)="onGoalCompleted($event)"
+    (goalDeleted)="onGoalDeleted($event)">
+  </app-goal-item>
+}
