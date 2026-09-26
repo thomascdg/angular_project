@@ -35,7 +35,7 @@ describe('TaskService', () => {
       completed: false,
       dueDate: new Date(),
     };
-    const goal: Goal = {
+    const goal = {
       id: 'goal-1',
       title: 'Objectif',
       limit_date: new Date(),
@@ -43,9 +43,10 @@ describe('TaskService', () => {
       tasks: [legacyTask],
     };
 
-    const tasks = service.loadForGoals([goal]);
+    const tasks = service.loadForGoals([goal as Goal]);
 
     expect(tasks[0].goalId).toBe('goal-1');
-    expect(goal.tasks).toEqual(tasks);
+    expect(service.getTasksForGoal(tasks, 'goal-1')).toEqual(tasks);
+    expect('tasks' in goal).toBe(false);
   });
 });

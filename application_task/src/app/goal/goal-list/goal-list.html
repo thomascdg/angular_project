@@ -7,7 +7,7 @@
 @for (goal of goals; track goal.id) {
   <app-goal-item
     [goal]="goal"
-    [tasks]="goal.tasks"
+    [tasks]="tasksForGoal(goal.id)"
     (goalCompleted)="onGoalCompleted($event)"
     (goalDeleted)="onGoalDeleted($event)"
     (taskCompleted)="onTaskCompleted($event)"

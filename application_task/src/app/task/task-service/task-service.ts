@@ -3,6 +3,8 @@ import { Goal } from '../../interface/Goal/goal';
 import { Task } from '../../interface/task/Task';
 import { TaskStorage } from '../task-storage/task-storage';
 
+type LegacyGoal = Goal & { tasks?: Task[] };
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,26 +56,25 @@ export class TaskService {
     let migratedLegacyTasks = false;
 
     goals.forEach(goal => {
-      goal.tasks.forEach(task => {
+      const legacyGoal = goal as LegacyGoal;
+      (legacyGoal.tasks ?? []).forEach(task => {
         if (!storedTaskIds.has(task.id)) {
           tasks.push({ ...task, goalId: goal.id });
           storedTaskIds.add(task.id);
           migratedLegacyTasks = true;
         }
       });
+      delete legacyGoal.tasks;
     });
 
     if (migratedLegacyTasks) {
       this.save(tasks);
     }
 
-    this.assignToGoals(goals, tasks);
     return tasks;
   }
 
-  assignToGoals(goals: Goal[], tasks: Task[]): void {
-    goals.forEach(goal => {
-      goal.tasks = tasks.filter(task => task.goalId === goal.id);
-    });
+  getTasksForGoal(tasks: Task[], goalId: string): Task[] {
+    return tasks.filter(task => task.goalId === goalId);
   }
 }

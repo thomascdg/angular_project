@@ -15,7 +15,12 @@ export class GoalStorage {
     }
 
     save(goals: Goal[]): void {
-        localStorage.setItem(this.key, JSON.stringify(goals));
+        const cleanGoals = goals.map(goal => {
+            const cleanGoal = { ...goal } as Goal & { tasks?: unknown };
+            delete cleanGoal.tasks;
+            return cleanGoal;
+        });
+        localStorage.setItem(this.key, JSON.stringify(cleanGoals));
     }
 
     delete(id: string): void {

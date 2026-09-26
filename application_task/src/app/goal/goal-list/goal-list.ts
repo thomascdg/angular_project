@@ -36,7 +36,6 @@ export class GoalList extends ItemListBase<Goal> implements OnInit {
       title,
       limit_date: new Date(),
       completed: false,
-      tasks: [],
     };
   }
 
@@ -54,16 +53,19 @@ export class GoalList extends ItemListBase<Goal> implements OnInit {
 
   onTaskCompleted(task: Task): void {
     this.tasks = this.taskService.toggle(this.tasks, task);
-    this.taskService.assignToGoals(this.goals, this.tasks);
   }
 
   onTaskDeleted(id: string): void {
     this.tasks = this.taskService.remove(this.tasks, id);
-    this.taskService.assignToGoals(this.goals, this.tasks);
+  }
+
+  tasksForGoal(goalId: string): Task[] {
+    return this.taskService.getTasksForGoal(this.tasks, goalId);
   }
 
   ngOnInit(): void {
     this.loadItems();
     this.tasks = this.taskService.loadForGoals(this.goals);
+    this.goalStorage.save(this.goals);
   }
 }
