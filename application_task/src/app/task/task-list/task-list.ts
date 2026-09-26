@@ -1,44 +1,52 @@
-import { Component,inject,OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { TaskItem } from '../task-item/task-item';
 import { Task } from '../../interface/task/Task';
 import{ FormsModule } from '@angular/forms';
-import { TaskStorage } from '../task-storage/task-storage';
+import { TaskService } from '../task-service/task-service';
+import { Goal } from '../../interface/Goal/goal';
+import { GoalStorage } from '../../goal/goal-storage/goal-storage';
+import { ItemListBase } from '../../shared/item-list-base';
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.html',
   imports: [TaskItem,FormsModule],
 })
-export class TaskList implements OnInit {
-  tasks: Task[] = [];
-  newTitle = '';
-  private storage = inject(TaskStorage);
+export class TaskList extends ItemListBase<Task> implements OnInit {
+  goals: Goal[] = [];
+  goalId = '';
+  private readonly taskService = inject(TaskService);
+  private readonly goalStorage = inject(GoalStorage);
 
-  addTask() {
-    if (!this.newTitle.trim()) return;
-
-    this.tasks.push({
-      id: crypto.randomUUID(),
-      title: this.newTitle,
-      description: '',
-      completed: false,
-      dueDate: new Date(),
-    });
-
-    this.newTitle = '';
-    this.storage.save(this.tasks);
+  constructor() {
+    super(inject(TaskService));
   }
 
-  onTaskCompleted(task: Task) {
-    const taskToUpdate = this.tasks.find(t => t.id === task.id);
-    if (taskToUpdate) taskToUpdate.completed = !taskToUpdate.completed;
+  get tasks(): Task[] {
+    return this.items;
   }
 
-  onTaskDeleted(id: string) {
-    this.tasks = this.tasks.filter(t => t.id !== id);
-    this.storage.delete(id);
+  set tasks(tasks: Task[]) {
+    this.items = tasks;
   }
 
-  ngOnInit() {
-    this.tasks = this.storage.load();
+  protected createItem(title: string): Task {
+    return this.taskService.create(title, this.goalId);
+  }
+
+  addTask(): void {
+    this.addItem();
+  }
+
+  onTaskCompleted(task: Task): void {
+    this.tasks = this.taskService.toggle(this.tasks, task);
+  }
+
+  onTaskDeleted(id: string): void {
+    this.tasks = this.taskService.remove(this.tasks, id);
+  }
+
+  ngOnInit(): void {
+    this.loadItems();
+    this.goals = this.goalStorage.load();
   }
 }

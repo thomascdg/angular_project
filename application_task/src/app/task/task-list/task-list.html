@@ -1,9 +1,15 @@
 <div>
   <input [(ngModel)]="newTitle" placeholder="Nouvelle tâche">
+  <select [(ngModel)]="goalId" aria-label="Objectif associé">
+    <option value="">Sans objectif</option>
+    @for (goal of goals; track goal.id) {
+      <option [value]="goal.id">{{ goal.title }}</option>
+    }
+  </select>
   <button (click)="addTask()">Ajouter</button>
 </div>
 
-@for (task of tasks; track task) {
+@for (task of tasks; track task.id) {
   <app-task-item
     [task]="task"
     (taskCompleted)="onTaskCompleted($event)"

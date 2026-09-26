@@ -2,6 +2,23 @@
   <input type="checkbox" [checked]="goal.completed" (change)="onGoalCompleted()">
   <span>{{ goal.title }}</span>
   <span>{{ goal.limit_date | date }}</span>
-  <span>{{ goal.tasks.length }} tâches</span>
+  <button type="button" (click)="toggleTasks()" [attr.aria-expanded]="expanded">
+    {{ expanded ? 'Masquer' : 'Afficher' }} {{ tasks.length }} tâche(s)
+  </button>
   <button (click)="onGoalDeleted()">Supprimer</button>
 </div>
+
+@if (expanded) {
+  <div>
+    @if (tasks.length === 0) {
+      <span>Aucune tâche associée</span>
+    }
+    @for (task of tasks; track task.id) {
+      <app-task-item
+        [task]="task"
+        (taskCompleted)="onTaskCompleted($event)"
+        (taskDeleted)="onTaskDeleted($event)">
+      </app-task-item>
+    }
+  </div>
+}

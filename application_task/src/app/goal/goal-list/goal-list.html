@@ -4,10 +4,13 @@
 </div>
 
 
-@for (goal of goals; track goal) {
+@for (goal of goals; track goal.id) {
   <app-goal-item
     [goal]="goal"
+    [tasks]="goal.tasks"
     (goalCompleted)="onGoalCompleted($event)"
-    (goalDeleted)="onGoalDeleted($event)">
+    (goalDeleted)="onGoalDeleted($event)"
+    (taskCompleted)="onTaskCompleted($event)"
+    (taskDeleted)="onTaskDeleted($event)">
   </app-goal-item>
 }

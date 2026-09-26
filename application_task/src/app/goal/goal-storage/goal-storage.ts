@@ -1,7 +1,9 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Goal } from '../../interface/Goal/goal';
 
-@Service()
+@Injectable({
+    providedIn: 'root',
+})
 export class GoalStorage {
     private readonly key = 'goals';
 
